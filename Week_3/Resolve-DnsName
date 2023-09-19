@@ -20,9 +20,8 @@ for ($i = 1; $i -le 254; $i++) {
     $IpAddress = "$NetworkPrefix$i"
     $Resolved = Resolve-DnsName -DnsOnly $IpAddress -Server $DnsServer -ErrorAction Ignore
 
-    if ($Resolved) {
-        Write-Host "Resolved IP Address $IpAddress to $($Resolved.QueryName)"
-    } else {
-        Write-Host "Failed to resolve IP Address $IpAddress"
+    if ($Resolved -ne $null) {
+        $HostName = $Resolved.QueryName
+        Write-Host "Resolved IP Address $IpAddress to $HostName"
     }
 }
