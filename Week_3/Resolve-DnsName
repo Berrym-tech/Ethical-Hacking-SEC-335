@@ -1,0 +1,28 @@
+param (
+    [string]$NetworkPrefix,
+    [string]$DnsServer
+)
+
+# Validate the NetworkPrefix parameter
+if (-not ($NetworkPrefix -match "^\d+\.\d+\.\d+\.")) {
+    Write-Host "Invalid NetworkPrefix format. Please provide a valid IP network prefix (e.g., 192.168.3)."
+    exit 1
+}
+
+# Validate the DnsServer parameter
+if (-not (Test-Connection -ComputerName $DnsServer -Count 1 -Quiet)) {
+    Write-Host "The specified DNS server ($DnsServer) is unreachable."
+    exit 1
+}
+
+# Loop through IP addresses within the network prefix and resolve them
+for ($i = 1; $i -le 254; $i++) {
+    $IpAddress = "$NetworkPrefix.$i"
+    $Resolved = Resolve-DnsName -DnsOnly $IpAddress -Server $DnsServer -ErrorAction Ignore
+
+    if ($Resolved) {
+        Write-Host "Resolved IP Address $IpAddress to $($Resolved.QueryName)"
+    } else {
+        Write-Host "Failed to resolve IP Address $IpAddress"
+    }
+}
