@@ -17,7 +17,7 @@ if (-not (Test-Connection -ComputerName $DnsServer -Count 1 -Quiet)) {
 
 # Loop through IP addresses within the network prefix and resolve them
 for ($i = 1; $i -le 254; $i++) {
-    $IpAddress = "$NetworkPrefix.$i"
+    $IpAddress = "$NetworkPrefix$i"
     $Resolved = Resolve-DnsName -DnsOnly $IpAddress -Server $DnsServer -ErrorAction Ignore
 
     if ($Resolved) {
